@@ -1,4 +1,5 @@
 name: DOCKER build & push
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 
 on: [push]
 
@@ -6,16 +7,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - run: |
+          echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+          echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+          echo "🔎 The name of the branch is ${{ github.ref }} and the repository is ${{ github.repository }}."
+      - name: cloning code to runner
+        uses: actions/checkout@v3
+        run: |
+          echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+          echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: docker build
         run: |
-          docker build ./etch-a-sketch -t paravar/tinytim:1
+          docker build ./etch-a-sketch -t paravar/etch-a-sketch:1
+          echo "🐳 docker image is built!"
       - name: docker login
         env:
           DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
           DOCKER_PASSWORD: ${{secrets.DOCKERHUB_TOKEN}}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          echo "🪵 logged in docker-hub"
       - name: docker push
         run: |
-          docker push paravar/tinytim:1
+          docker push paravar/etch-a-sketch:1
+      - run: echo "🏆 docker images is pushed. done! 👍"
