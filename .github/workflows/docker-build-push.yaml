@@ -1,0 +1,22 @@
+name: DOCKER build & push
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: docker build
+      - run: |
+          docker build ./etch-a-sketch -t paravar/tinytim:1
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKERHUB_TOKEN}}
+      - run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: docker push
+      - run: |
+          docker push paravar/tinytim:1
